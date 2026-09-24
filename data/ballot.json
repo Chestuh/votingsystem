@@ -1,0 +1,14 @@
+﻿{
+    "candidates":  {
+                       "id":  "candidate-d6dfce9c4d7b",
+                       "name":  "Chester John Flores",
+                       "position":  "President",
+                       "bio":  "Chester",
+                       "votes":  1,
+                       "color":  "maya"
+                   },
+    "votedTokens":  [
+                        "871c8242-b74d-405e-9593-b5509e1f8933",
+                        "442eedef-ff24-439e-9f6f-378278554f34"
+                    ]
+}

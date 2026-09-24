@@ -1,0 +1,82 @@
+import { Redis } from '@upstash/redis';
+import { createHmac, randomUUID, timingSafeEqual } from 'node:crypto';
+
+export const redis = Redis.fromEnv();
+export const stateKey = 'voiceboard:state';
+export const positions = ['President', 'Vice President', 'Secretary', 'Treasurer'];
+export const colors = ['maya', 'jonah', 'alina', 'sam'];
+export const defaultState = {
+  candidates: [
+    { id: 'maya', name: 'Maya Chen', position: 'President', bio: 'Product designer - Austin', votes: 488, color: 'maya' },
+    { id: 'jonah', name: 'Jonah Reed', position: 'President', bio: 'Documentary maker - Detroit', votes: 402, color: 'jonah' },
+    { id: 'alina', name: 'Alina Petrov', position: 'Vice President', bio: 'Creative technologist - Lisbon', votes: 244, color: 'alina' },
+    { id: 'sam', name: 'Sam Williams', position: 'Treasurer', bio: 'Community builder - Oakland', votes: 150, color: 'sam' },
+  ],
+  votedTokens: [],
+};
+
+export function sendJson(response, status, payload) {
+  response.status(status).json(payload);
+}
+
+export function readBody(request) {
+  if (!request.body) return null;
+  if (typeof request.body === 'string') {
+    try { return JSON.parse(request.body); } catch { return null; }
+  }
+  return request.body;
+}
+
+export async function getState() {
+  const state = await redis.get(stateKey);
+  if (state) return state;
+  await redis.set(stateKey, defaultState);
+  return structuredClone(defaultState);
+}
+
+export function adminCredentials() {
+  return {
+    username: process.env.VOICEBOARD_ADMIN_USER,
+    password: process.env.VOICEBOARD_ADMIN_PASSWORD,
+  };
+}
+
+function sessionSecret() {
+  return process.env.VOICEBOARD_SESSION_SECRET || adminCredentials().password || 'configure-a-session-secret';
+}
+
+function sign(value) {
+  return createHmac('sha256', sessionSecret()).update(value).digest('base64url');
+}
+
+export function createSession() {
+  const payload = `${Date.now() + 8 * 60 * 60 * 1000}.${randomUUID()}`;
+  return `${payload}.${sign(payload)}`;
+}
+
+export function sessionCookie(request) {
+  const cookieHeader = request.headers.cookie || '';
+  const cookie = cookieHeader.split(';').map((item) => item.trim()).find((item) => item.startsWith('voiceboard_session='));
+  if (!cookie) return null;
+  const token = decodeURIComponent(cookie.slice('voiceboard_session='.length));
+  const pieces = token.split('.');
+  if (pieces.length < 3 || Number(pieces[0]) < Date.now()) return null;
+  const signature = pieces.pop();
+  const payload = pieces.join('.');
+  const expected = sign(payload);
+  if (signature.length !== expected.length) return null;
+  return timingSafeEqual(Buffer.from(signature), Buffer.from(expected)) ? token : null;
+}
+
+export function cookieHeader(request, token) {
+  const secure = request.headers['x-forwarded-proto'] === 'https' ? '; Secure' : '';
+  return `voiceboard_session=${encodeURIComponent(token)}; Path=/; HttpOnly; SameSite=Lax; Max-Age=28800${secure}`;
+}
+
+export function requireAdmin(request, response) {
+  if (sessionCookie(request)) return true;
+  sendJson(response, 401, { error: 'Admin sign-in required.' });
+  return false;
+}
+
+export { randomUUID };

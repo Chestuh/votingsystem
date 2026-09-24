@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#102d2a" />
+  <title>Voiceboard | Admin Workspace</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <script src="admin.js" defer></script>
+</head>
+<body>
+  <div class="page-shell admin-page">
+    <header class="topbar">
+      <a class="brand" href="index.html" aria-label="Voiceboard home"><span class="brand-mark" aria-hidden="true">V</span><span>voiceboard</span></a>
+      <div class="topbar-actions"><a class="admin-link" href="index.html">Public poll ↗</a><div class="poll-status"><span class="live-dot" aria-hidden="true"></span> Admin workspace</div></div>
+    </header>
+
+    <main>
+      <section class="admin-login" id="login-panel" aria-labelledby="login-title">
+        <div class="eyebrow">Restricted access / 03</div>
+        <h1 id="login-title">Admin<br /><em>sign in.</em></h1>
+        <p class="hero-copy">Sign in to manage officer positions and candidate registration.</p>
+        <form class="login-form" id="login-form">
+          <label>Username<input id="admin-username" name="username" type="text" autocomplete="username" required /></label>
+          <label>Password<input id="admin-password" name="password" type="password" autocomplete="current-password" required /></label>
+          <button class="admin-button" type="submit"><span>Sign in to workspace</span><span aria-hidden="true">↗</span></button>
+          <p class="form-note" id="login-message" aria-live="polite">Use the administrator credentials configured on the ballot server.</p>
+        </form>
+      </section>
+
+      <div id="admin-console" hidden>
+      <section class="admin-hero" aria-labelledby="admin-title">
+        <div class="eyebrow">Ballot control / 02</div>
+        <h1 id="admin-title">Build the officer<br /><em>ballot with intent.</em></h1>
+        <p class="hero-copy">Add every person who wants to run, assign their office, and keep the public ballot organized.</p>
+      </section>
+
+      <section class="admin-section admin-section-page" aria-label="Candidate management">
+        <div class="admin-heading"><div><span class="section-label">Candidate management</span><h2>Add candidates by office</h2></div><span class="admin-lock">Authenticated administrator</span></div>
+        <div class="admin-grid">
+          <form class="admin-form" id="candidate-form">
+            <div class="form-intro"><strong>Register a candidate</strong><span>New entries appear on the public poll as soon as they are added.</span></div>
+            <label>Full name<input id="candidate-name" name="name" type="text" placeholder="e.g. Jordan Lee" required /></label>
+            <label>Officer position<select id="candidate-position" name="position" required><option value="President">President</option><option value="Vice President">Vice President</option><option value="Secretary">Secretary</option><option value="Treasurer">Treasurer</option></select></label>
+            <label>Location or short bio<input id="candidate-bio" name="bio" type="text" placeholder="e.g. Student council · Manila" required /></label>
+            <button class="admin-button" type="submit"><span>Add to ballot</span><span aria-hidden="true">+</span></button>
+            <p class="form-note" id="admin-message" aria-live="polite">Candidate records are stored on the ballot server.</p>
+          </form>
+          <div class="candidate-directory"><div class="directory-top"><div><span class="section-label">Candidate directory</span><strong id="candidate-total">0 candidates</strong></div><span class="directory-hint">Manage by office</span></div><div class="directory-list" id="directory-list"></div></div>
+        </div>
+      </section>
+      </div>
+    </main>
+
+    <footer class="footer"><span>VOICEBOARD / ADMIN CONTROL</span><span>Keep every office clear.</span></footer>
+  </div>
+</body>
+</html>
