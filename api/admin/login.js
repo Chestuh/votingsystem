@@ -1,4 +1,4 @@
-import { adminCredentials, cookieHeader, createSession, readBody, sendJson } from '../../_lib.js';
+import { adminCredentials, cookieHeader, createSession, readBody, sendJson } from '../_lib.js';
 
 export default async function handler(request, response) {
   if (request.method !== 'POST') {

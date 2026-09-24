@@ -1,7 +1,7 @@
 import { Redis } from '@upstash/redis';
 import { createHmac, randomUUID, timingSafeEqual } from 'node:crypto';
 
-export const redis = Redis.fromEnv();
+let redisClient;
 export const stateKey = 'voiceboard:state';
 export const positions = ['President', 'Vice President', 'Secretary', 'Treasurer'];
 export const colors = ['maya', 'jonah', 'alina', 'sam'];
@@ -14,6 +14,22 @@ export const defaultState = {
   ],
   votedTokens: [],
 };
+
+export function getRedis() {
+  const url = process.env.UPSTASH_REDIS_REST_URL || process.env.KV_REST_API_URL;
+  const token = process.env.UPSTASH_REDIS_REST_TOKEN || process.env.KV_REST_API_TOKEN;
+  if (!url || !token) {
+    throw new Error('Vercel Redis is not configured. Connect Redis and add UPSTASH_REDIS_REST_URL/UPSTASH_REDIS_REST_TOKEN.');
+  }
+  if (!redisClient) redisClient = new Redis({ url, token });
+  return redisClient;
+}
+
+export function handleApiError(response, error) {
+  const message = error instanceof Error ? error.message : 'The API could not complete the request.';
+  const status = message.includes('Redis is not configured') ? 503 : 500;
+  sendJson(response, status, { error: message });
+}
 
 export function sendJson(response, status, payload) {
   response.status(status).json(payload);
@@ -28,6 +44,7 @@ export function readBody(request) {
 }
 
 export async function getState() {
+  const redis = getRedis();
   const state = await redis.get(stateKey);
   if (state) return state;
   await redis.set(stateKey, defaultState);
