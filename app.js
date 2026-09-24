@@ -50,6 +50,7 @@ async function readResponse(response) {
 }
 
 function renderPositionOptions() {
+  if (!publicPosition) return;
   const positions = [...new Set(candidates.map((candidate) => candidate.position))];
   if (!positions.includes(currentPosition)) currentPosition = positions[0] || '';
   publicPosition.innerHTML = positions.map((position) => `<option value="${escapeHTML(position)}">${escapeHTML(position)}</option>`).join('');
@@ -86,6 +87,8 @@ function renderResults() {
 async function refreshBallot(showError = true) {
   try {
     candidates = await getCandidates();
+    const positions = [...new Set(candidates.map((candidate) => candidate.position))];
+    if (!positions.includes(currentPosition)) currentPosition = positions[0] || '';
     renderPositionOptions();
     renderCandidates();
     renderResults();
@@ -94,16 +97,18 @@ async function refreshBallot(showError = true) {
   }
 }
 
-publicPosition.addEventListener('change', () => {
-  currentPosition = publicPosition.value;
-  hasVoted = false;
-  voteForm.reset();
-  voteButton.disabled = true;
-  voteButton.querySelector('span').textContent = 'Submit my vote';
-  voteMessage.textContent = 'Your choice is private and can’t be changed.';
-  renderCandidates();
-  renderResults();
-});
+if (publicPosition) {
+  publicPosition.addEventListener('change', () => {
+    currentPosition = publicPosition.value;
+    hasVoted = false;
+    voteForm.reset();
+    voteButton.disabled = true;
+    voteButton.querySelector('span').textContent = 'Submit my vote';
+    voteMessage.textContent = 'Your choice is private and can’t be changed.';
+    renderCandidates();
+    renderResults();
+  });
+}
 
 voteForm.addEventListener('submit', async (event) => {
   event.preventDefault();

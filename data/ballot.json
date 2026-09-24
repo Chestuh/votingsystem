@@ -1,12 +1,22 @@
 ﻿{
-    "candidates":  {
-                       "id":  "candidate-d6dfce9c4d7b",
-                       "name":  "Chester John Flores",
-                       "position":  "Captain",
-                       "bio":  "Chester",
-                       "votes":  1,
-                       "color":  "maya"
-                   },
+    "candidates":  [
+                       {
+                           "id":  "candidate-d6dfce9c4d7b",
+                           "name":  "Chester John Flores",
+                           "position":  "Captain",
+                           "bio":  "Chester",
+                           "votes":  1,
+                           "color":  "maya"
+                       },
+                       {
+                           "id":  "candidate-5eaab05f97ab",
+                           "name":  "asd",
+                           "position":  "Captain",
+                           "bio":  "asdasd",
+                           "votes":  0,
+                           "color":  "jonah"
+                       }
+                   ],
     "votedTokens":  [
                         "871c8242-b74d-405e-9593-b5509e1f8933",
                         "442eedef-ff24-439e-9f6f-378278554f34"
