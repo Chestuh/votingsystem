@@ -3,14 +3,14 @@ import { createHmac, randomUUID, timingSafeEqual } from 'node:crypto';
 
 let redisClient;
 export const stateKey = 'voiceboard:state';
-export const positions = ['President', 'Vice President', 'Secretary', 'Treasurer'];
+export const positions = ['Captain', 'Vice-Captain', 'Secretary', 'Guidance Officers', 'Leiutenants'];
 export const colors = ['maya', 'jonah', 'alina', 'sam'];
 export const defaultState = {
   candidates: [
-    { id: 'maya', name: 'Maya Chen', position: 'President', bio: 'Product designer - Austin', votes: 488, color: 'maya' },
-    { id: 'jonah', name: 'Jonah Reed', position: 'President', bio: 'Documentary maker - Detroit', votes: 402, color: 'jonah' },
-    { id: 'alina', name: 'Alina Petrov', position: 'Vice President', bio: 'Creative technologist - Lisbon', votes: 244, color: 'alina' },
-    { id: 'sam', name: 'Sam Williams', position: 'Treasurer', bio: 'Community builder - Oakland', votes: 150, color: 'sam' },
+    { id: 'maya', name: 'Maya Chen', position: 'Captain', bio: 'Product designer - Austin', votes: 488, color: 'maya' },
+    { id: 'jonah', name: 'Jonah Reed', position: 'Vice-Captain', bio: 'Documentary maker - Detroit', votes: 402, color: 'jonah' },
+    { id: 'alina', name: 'Alina Petrov', position: 'Secretary', bio: 'Creative technologist - Lisbon', votes: 244, color: 'alina' },
+    { id: 'sam', name: 'Sam Williams', position: 'Guidance Officers', bio: 'Community builder - Oakland', votes: 150, color: 'sam' },
   ],
   votedTokens: [],
 };

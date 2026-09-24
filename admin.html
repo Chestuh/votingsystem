@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#102d2a" />
-  <title>Voiceboard | Admin Workspace</title>
+  <title>NAES Guild | Admin Workspace</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -14,15 +14,15 @@
 <body>
   <div class="page-shell admin-page">
     <header class="topbar">
-      <a class="brand" href="index.html" aria-label="Voiceboard home"><span class="brand-mark" aria-hidden="true">V</span><span>voiceboard</span></a>
+      <a class="brand" href="index.html" aria-label="NAES Guild home"><span class="brand-mark" aria-hidden="true">NAES</span><span>New Antioch Esports Guild</span></a>
       <div class="topbar-actions"><a class="admin-link" href="index.html">Public poll ↗</a><div class="poll-status"><span class="live-dot" aria-hidden="true"></span> Admin workspace</div></div>
     </header>
 
     <main>
       <section class="admin-login" id="login-panel" aria-labelledby="login-title">
         <div class="eyebrow">Restricted access / 03</div>
-        <h1 id="login-title">Admin<br /><em>sign in.</em></h1>
-        <p class="hero-copy">Sign in to manage officer positions and candidate registration.</p>
+        <h1 id="login-title">Admin </h1>
+        <p class="hero-copy">For Administrator Access. Keep out!</p>
         <form class="login-form" id="login-form">
           <label>Username<input id="admin-username" name="username" type="text" autocomplete="username" required /></label>
           <label>Password<input id="admin-password" name="password" type="password" autocomplete="current-password" required /></label>
@@ -44,7 +44,7 @@
           <form class="admin-form" id="candidate-form">
             <div class="form-intro"><strong>Register a candidate</strong><span>New entries appear on the public poll as soon as they are added.</span></div>
             <label>Full name<input id="candidate-name" name="name" type="text" placeholder="e.g. Jordan Lee" required /></label>
-            <label>Officer position<select id="candidate-position" name="position" required><option value="President">President</option><option value="Vice President">Vice President</option><option value="Secretary">Secretary</option><option value="Treasurer">Treasurer</option></select></label>
+            <label>Officer position<select id="candidate-position" name="position" required><option value="Captain">Captain</option><option value="Vice-Captain">Vice-Captain</option><option value="Secretary">Secretary</option><option value="Guidance Officers">Guidance Officers</option><option value="Leiutenants">Leiutenants</option></select></label>
             <label>Location or short bio<input id="candidate-bio" name="bio" type="text" placeholder="e.g. Student council · Manila" required /></label>
             <button class="admin-button" type="submit"><span>Add to ballot</span><span aria-hidden="true">+</span></button>
             <p class="form-note" id="admin-message" aria-live="polite">Candidate records are stored on the ballot server.</p>
@@ -55,7 +55,7 @@
       </div>
     </main>
 
-    <footer class="footer"><span>VOICEBOARD / ADMIN CONTROL</span><span>Keep every office clear.</span></footer>
+    <footer class="footer"><span>NAES Guild / ADMIN CONTROL</span></footer>
   </div>
 </body>
 </html>
