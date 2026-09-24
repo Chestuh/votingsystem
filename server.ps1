@@ -6,7 +6,7 @@ $ErrorActionPreference = 'Stop'
 $Root = Split-Path -Parent $MyInvocation.MyCommand.Path
 $DataDirectory = Join-Path $Root 'data'
 $DataFile = Join-Path $DataDirectory 'ballot.json'
-$AllowedPositions = @('President', 'Vice President', 'Secretary', 'Treasurer')
+$AllowedPositions = @('Captain', 'Vice-Captain', 'Secretary', 'Guidance Officers', 'Leiutenants')
 $Palette = @('maya', 'jonah', 'alina', 'sam')
 $Sessions = @{}
 
@@ -17,10 +17,10 @@ if (-not (Test-Path $DataDirectory)) {
 if (-not (Test-Path $DataFile)) {
   $initialState = [ordered]@{
     candidates = @(
-      [ordered]@{ id = 'maya'; name = 'Maya Chen'; position = 'President'; bio = 'Product designer - Austin'; votes = 488; color = 'maya' },
-      [ordered]@{ id = 'jonah'; name = 'Jonah Reed'; position = 'President'; bio = 'Documentary maker - Detroit'; votes = 402; color = 'jonah' },
-      [ordered]@{ id = 'alina'; name = 'Alina Petrov'; position = 'Vice President'; bio = 'Creative technologist - Lisbon'; votes = 244; color = 'alina' },
-      [ordered]@{ id = 'sam'; name = 'Sam Williams'; position = 'Treasurer'; bio = 'Community builder - Oakland'; votes = 150; color = 'sam' }
+      [ordered]@{ id = 'maya'; name = 'Maya Chen'; position = 'Captain'; bio = 'Product designer - Austin'; votes = 488; color = 'maya' },
+      [ordered]@{ id = 'jonah'; name = 'Jonah Reed'; position = 'Vice-Captain'; bio = 'Documentary maker - Detroit'; votes = 402; color = 'jonah' },
+      [ordered]@{ id = 'alina'; name = 'Alina Petrov'; position = 'Secretary'; bio = 'Creative technologist - Lisbon'; votes = 244; color = 'alina' },
+      [ordered]@{ id = 'sam'; name = 'Sam Williams'; position = 'Guidance Officers'; bio = 'Community builder - Oakland'; votes = 150; color = 'sam' }
     )
     votedTokens = @()
   }
