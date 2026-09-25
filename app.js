@@ -197,7 +197,7 @@ voteForm.addEventListener('submit', async (event) => {
 restoreVoterAccount();
 renderPollCountdown();
 refreshBallot();
+setInterval(renderPollCountdown, 1000);
 setInterval(() => {
-  renderPollCountdown();
   refreshBallot(false);
 }, 5000);
