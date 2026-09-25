@@ -1,4 +1,4 @@
-import { getRedis, getState, handleApiError, sendJson, stateKey } from './_lib.js';
+import { getClientIp, getRedis, getState, handleApiError, hasVotedFromIp, sendJson, stateKey } from './_lib.js';
 
 export default async function handler(request, response) {
   try {
@@ -7,13 +7,16 @@ export default async function handler(request, response) {
       return sendJson(response, 405, { error: 'Method not allowed.' });
     }
     const payload = request.body;
-    if (!payload?.candidateId || !payload?.voterToken) return sendJson(response, 400, { error: 'Candidate and voter token are required.' });
+    if (!payload?.candidateId) return sendJson(response, 400, { error: 'Candidate is required.' });
+    const clientIp = getClientIp(request);
     const state = await getState();
-    if (state.votedTokens.includes(payload.voterToken)) return sendJson(response, 409, { error: 'This browser has already voted.' });
+    if (hasVotedFromIp(state, clientIp)) return sendJson(response, 409, { error: 'This IP address has already voted.' });
+    if (payload.voterToken && state.votedTokens.includes(payload.voterToken)) return sendJson(response, 409, { error: 'This browser has already voted.' });
     const candidate = state.candidates.find((item) => item.id === payload.candidateId);
     if (!candidate) return sendJson(response, 404, { error: 'Candidate not found.' });
     candidate.votes += 1;
-    state.votedTokens.push(payload.voterToken);
+    state.votedIPs = [...new Set([...state.votedIPs, clientIp])];
+    if (payload.voterToken) { state.votedTokens = [...new Set([...state.votedTokens, payload.voterToken])]; }
     await getRedis().set(stateKey, state);
     return sendJson(response, 200, { message: 'Vote recorded.' });
   } catch (error) {
