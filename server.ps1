@@ -119,6 +119,7 @@ try {
 
       if ($path -eq '/api/candidates' -and $method -eq 'GET') {
         $state = Read-State
+        $context.Response.Headers['Cache-Control'] = 'no-store, max-age=0'
         Send-Json $context 200 @{ candidates = @($state.candidates) }
       } elseif ($path -eq '/api/vote' -and $method -eq 'POST') {
         $body = Read-Body $context

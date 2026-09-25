@@ -7,6 +7,7 @@ export default async function handler(request, response) {
       return sendJson(response, 405, { error: 'Method not allowed.' });
     }
     const state = await getState();
+    response.setHeader('Cache-Control', 'no-store, max-age=0');
     return sendJson(response, 200, { candidates: state.candidates, pollEndsAt: state.pollEndsAt || null });
   } catch (error) {
     return handleApiError(response, error);
