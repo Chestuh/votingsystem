@@ -8,6 +8,7 @@ const leaderboard = document.querySelector('#leaderboard');
 const voterIgnInput = document.querySelector('#voter-ign');
 const voterTagInput = document.querySelector('#voter-tag');
 const pollCountdown = document.querySelector('#poll-countdown');
+const pollCountdownLabel = document.querySelector('#poll-countdown-label');
 const pollClosedOverlay = document.querySelector('#poll-closed-overlay');
 const voterAccountKey = 'voiceboard-voter-account';
 let candidates = [];
@@ -119,9 +120,12 @@ function renderPollCountdown() {
 
   const remaining = formatTimeRemaining(pollEndsAt);
   pollCountdown.textContent = remaining;
-  if (pollClosedOverlay) pollClosedOverlay.hidden = remaining !== 'Closed';
+  const isClosed = remaining === 'Closed';
+  if (pollCountdownLabel) pollCountdownLabel.textContent = isClosed ? 'POLL CLOSED' : 'Poll closes in';
+  if (pollCountdown) pollCountdown.hidden = isClosed;
+  if (pollClosedOverlay) pollClosedOverlay.hidden = !isClosed;
 
-  if (remaining === 'Closed') {
+  if (isClosed) {
     voteButton.disabled = true;
     if (!hasVoted) voteMessage.textContent = 'The poll is closed.';
   }
