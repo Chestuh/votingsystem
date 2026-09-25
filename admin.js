@@ -7,6 +7,8 @@ const pollForm = document.querySelector('#poll-form');
 const pollClosesAtInput = document.querySelector('#poll-closes-at');
 const directoryList = document.querySelector('#directory-list');
 const candidateTotal = document.querySelector('#candidate-total');
+const resultsList = document.querySelector('#admin-results-list');
+const resultsTotal = document.querySelector('#results-total');
 const adminMessage = document.querySelector('#admin-message');
 const pollMessage = document.querySelector('#poll-message');
 const voterList = document.querySelector('#voter-list');
@@ -22,6 +24,26 @@ function escapeHTML(value) {
 
 function getInitials(name) {
   return name.split(' ').slice(0, 2).map((part) => part[0]).join('').toUpperCase();
+}
+
+function renderAdminResults() {
+  const positionGroups = candidates.reduce((groups, candidate) => {
+    if (!groups[candidate.position]) groups[candidate.position] = [];
+    groups[candidate.position].push(candidate);
+    return groups;
+  }, {});
+  const totalVotes = candidates.reduce((sum, candidate) => sum + Number(candidate.votes || 0), 0);
+  resultsTotal.textContent = `${totalVotes} ${totalVotes === 1 ? 'vote' : 'votes'}`;
+  resultsList.innerHTML = Object.keys(positionGroups).length
+    ? Object.entries(positionGroups).map(([position, positionCandidates]) => {
+      const positionTotal = positionCandidates.reduce((sum, candidate) => sum + Number(candidate.votes || 0), 0);
+      const rows = [...positionCandidates].sort((first, second) => second.votes - first.votes).map((candidate) => {
+        const percentage = positionTotal ? Math.round((candidate.votes / positionTotal) * 100) : 0;
+        return `<div class="admin-result-row"><div class="admin-result-heading"><span>${escapeHTML(candidate.name)}</span><strong>${candidate.votes} votes</strong></div><div class="admin-result-track"><span class="admin-result-fill fill-${candidate.color}" style="--result-progress: ${percentage}%"></span></div><small>${percentage}% of ${escapeHTML(position)}</small></div>`;
+      }).join('');
+      return `<section class="admin-result-group"><h3>${escapeHTML(position)}</h3>${rows}</section>`;
+    }).join('')
+    : '<p class="empty-state">No vote results yet.</p>';
 }
 
 async function request(url, options = {}) {
@@ -58,6 +80,7 @@ async function loadDirectory() {
   directoryList.innerHTML = candidates.length
     ? candidates.map((candidate) => `<div class="directory-item"><span class="directory-avatar avatar-${candidate.color}">${escapeHTML(getInitials(candidate.name))}</span><span class="directory-details"><strong>${escapeHTML(candidate.name)}</strong><small>${escapeHTML(candidate.position)} · ${candidate.votes} votes</small></span><button class="remove-button" type="button" data-remove="${candidate.id}" aria-label="Remove ${escapeHTML(candidate.name)}">Remove</button></div>`).join('')
     : '<p class="empty-state">No candidates registered yet.</p>';
+  renderAdminResults();
   directoryList.querySelectorAll('[data-remove]').forEach((button) => {
     button.addEventListener('click', async () => {
       button.disabled = true;
