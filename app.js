@@ -12,7 +12,7 @@ let currentPosition = '';
 let hasVoted = false;
 
 function getVoterAccount() {
-  return (voterAccountInput?.value || '').trim().toLowerCase();
+  return (voterAccountInput?.value || '').trim().replace(/\s+/g, '').toUpperCase();
 }
 
 function restoreVoterAccount() {
@@ -119,6 +119,11 @@ voteForm.addEventListener('submit', async (event) => {
   const selectedId = new FormData(voteForm).get('candidate');
   const voterAccount = getVoterAccount();
   if (!selectedId || !voterAccount || hasVoted) return;
+  if (!/^[A-Z0-9_]+#[0-9]{4}$/.test(voterAccount)) {
+    voteButton.disabled = false;
+    voteMessage.textContent = 'Use your IGN and 4-digit tag, for example Chizu#0328.';
+    return;
+  }
   voteButton.disabled = true;
   voteMessage.textContent = 'Submitting your vote...';
   try {

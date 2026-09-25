@@ -3,17 +3,17 @@ import assert from 'node:assert/strict';
 
 import { hasAccountVoted, normalizeVoterAccount, recordVoterAccount } from '../api/vote.js';
 
-test('normalizeVoterAccount trims and normalizes account identifiers', () => {
-  assert.equal(normalizeVoterAccount('  Alice@Example.com  '), 'alice@example.com');
-  assert.equal(normalizeVoterAccount(' user_42 '), 'user_42');
+test('normalizeVoterAccount trims and normalizes IGN#TAG account identifiers', () => {
+  assert.equal(normalizeVoterAccount('  chizu#0328  '), 'CHIZU#0328');
+  assert.equal(normalizeVoterAccount('  ryu#9999 '), 'RYU#9999');
   assert.equal(normalizeVoterAccount(''), '');
 });
 
-test('vote tracking uses account names instead of browser tokens', () => {
-  const state = { votedAccounts: ['alice@example.com'] };
-  assert.equal(hasAccountVoted(state, 'Alice@Example.com'), true);
-  assert.equal(hasAccountVoted(state, 'bob@example.com'), false);
+test('vote tracking uses accounts instead of browser tokens', () => {
+  const state = { votedAccounts: ['CHIZU#0328'] };
+  assert.equal(hasAccountVoted(state, 'chizu#0328'), true);
+  assert.equal(hasAccountVoted(state, 'zed#9999'), false);
 
-  const updated = recordVoterAccount(state, 'bob@example.com');
-  assert.deepEqual(updated.votedAccounts, ['alice@example.com', 'bob@example.com']);
+  const updated = recordVoterAccount(state, 'zed#9999');
+  assert.deepEqual(updated.votedAccounts, ['CHIZU#0328', 'ZED#9999']);
 });

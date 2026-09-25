@@ -1,7 +1,7 @@
 import { getRedis, getState, handleApiError, sendJson, stateKey } from './_lib.js';
 
 export function normalizeVoterAccount(value) {
-  return String(value ?? '').trim().toLowerCase();
+  return String(value ?? '').trim().replace(/\s+/g, '').toUpperCase();
 }
 
 export function hasAccountVoted(state, voterAccount) {
