@@ -12,7 +12,7 @@ export const defaultState = {
     { id: 'alina', name: 'Alina Petrov', position: 'Secretary', bio: 'Creative technologist - Lisbon', votes: 244, color: 'alina' },
     { id: 'sam', name: 'Sam Williams', position: 'Guidance Officers', bio: 'Community builder - Oakland', votes: 150, color: 'sam' },
   ],
-  votedTokens: [],
+  votedAccounts: [],
 };
 
 export function getRedis() {

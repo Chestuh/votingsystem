@@ -23,9 +23,9 @@ If no password is configured, the server generates a temporary password and prin
 - Candidates and vote totals are persisted in `data/ballot.json`.
 - The public page refreshes the live tally every five seconds.
 - Admin candidate changes are protected by a session cookie.
-- A browser voter token prevents a second vote from the same browser for this ballot.
+- One vote is allowed per account for this ballot.
 
-For public deployment, put the server behind HTTPS and a reverse proxy, set a permanent strong admin password through the environment, and replace the browser-token voter limit with real voter authentication if one-person-one-vote identity enforcement is required.
+For public deployment, put the server behind HTTPS and a reverse proxy, set a permanent strong admin password through the environment, and pair this account-based limit with real voter authentication for stronger one-person-one-vote enforcement.
 
 ## Deploy on Vercel
 

@@ -5,18 +5,20 @@ const voteMessage = document.querySelector('#vote-message');
 const totalVotesElement = document.querySelector('#total-votes');
 const publicPosition = document.querySelector('#public-position');
 const leaderboard = document.querySelector('#leaderboard');
-const voterTokenKey = 'voiceboard-voter-token';
+const voterAccountInput = document.querySelector('#voter-account');
+const voterAccountKey = 'voiceboard-voter-account';
 let candidates = [];
 let currentPosition = '';
 let hasVoted = false;
 
-function getVoterToken() {
-  let token = localStorage.getItem(voterTokenKey);
-  if (!token) {
-    token = crypto.randomUUID();
-    localStorage.setItem(voterTokenKey, token);
-  }
-  return token;
+function getVoterAccount() {
+  return (voterAccountInput?.value || '').trim().toLowerCase();
+}
+
+function restoreVoterAccount() {
+  if (!voterAccountInput) return;
+  const savedAccount = localStorage.getItem(voterAccountKey);
+  if (savedAccount) voterAccountInput.value = savedAccount.trim();
 }
 
 function formatNumber(value) {
@@ -99,9 +101,11 @@ async function refreshBallot(showError = true) {
 
 if (publicPosition) {
   publicPosition.addEventListener('change', () => {
+    const savedAccount = getVoterAccount();
     currentPosition = publicPosition.value;
     hasVoted = false;
     voteForm.reset();
+    if (voterAccountInput) voterAccountInput.value = savedAccount;
     voteButton.disabled = true;
     voteButton.querySelector('span').textContent = 'Submit my vote';
     voteMessage.textContent = 'Your choice is private and can’t be changed.';
@@ -113,11 +117,13 @@ if (publicPosition) {
 voteForm.addEventListener('submit', async (event) => {
   event.preventDefault();
   const selectedId = new FormData(voteForm).get('candidate');
-  if (!selectedId || hasVoted) return;
+  const voterAccount = getVoterAccount();
+  if (!selectedId || !voterAccount || hasVoted) return;
   voteButton.disabled = true;
   voteMessage.textContent = 'Submitting your vote...';
   try {
-    const response = await fetch('/api/vote', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ candidateId: selectedId, voterToken: getVoterToken() }) });
+    localStorage.setItem(voterAccountKey, voterAccount);
+    const response = await fetch('/api/vote', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ candidateId: selectedId, voterAccount }) });
     const data = await readResponse(response);
     if (!response.ok) throw new Error(data.error || 'Vote could not be submitted.');
     hasVoted = true;
@@ -130,5 +136,6 @@ voteForm.addEventListener('submit', async (event) => {
   }
 });
 
+restoreVoterAccount();
 refreshBallot();
 setInterval(() => refreshBallot(false), 5000);
