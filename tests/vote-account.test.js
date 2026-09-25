@@ -1,7 +1,13 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 
+import { defaultState } from '../api/_lib.js';
 import { hasAccountVoted, normalizeVoterAccount, recordVote, recordVoterAccount } from '../api/vote.js';
+
+test('default ballot state includes a future poll deadline', () => {
+  assert.ok(defaultState.pollEndsAt);
+  assert.ok(new Date(defaultState.pollEndsAt).getTime() > Date.now());
+});
 
 test('normalizeVoterAccount trims and normalizes IGN#TAG account identifiers', () => {
   assert.equal(normalizeVoterAccount('  chizu#0328  '), 'CHIZU#0328');

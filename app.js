@@ -7,10 +7,12 @@ const publicPosition = document.querySelector('#public-position');
 const leaderboard = document.querySelector('#leaderboard');
 const voterIgnInput = document.querySelector('#voter-ign');
 const voterTagInput = document.querySelector('#voter-tag');
+const pollCountdown = document.querySelector('#poll-countdown');
 const voterAccountKey = 'voiceboard-voter-account';
 let candidates = [];
 let currentPosition = '';
 let hasVoted = false;
+let pollEndsAt = null;
 
 function getVoterAccount() {
   const ign = (voterIgnInput?.value || '').trim().replace(/\s+/g, '').toUpperCase();
@@ -92,9 +94,43 @@ function renderResults() {
     : '<p class="empty-state empty-state-dark">No results yet. Ask an admin to add a candidate.</p>';
 }
 
+function formatTimeRemaining(endsAt) {
+  const diff = new Date(endsAt).getTime() - Date.now();
+  if (diff <= 0) return 'Closed';
+  const totalSeconds = Math.floor(diff / 1000);
+  const days = Math.floor(totalSeconds / 86400);
+  const hours = Math.floor((totalSeconds % 86400) / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+
+  if (days > 0) return `${days}d ${hours}h`;
+  if (hours > 0) return `${hours}h ${minutes}m`;
+  if (minutes > 0) return `${minutes}m ${seconds}s`;
+  return `${seconds}s`;
+}
+
+function renderPollCountdown() {
+  if (!pollCountdown) return;
+  if (!pollEndsAt) {
+    pollCountdown.textContent = '...';
+    return;
+  }
+
+  const remaining = formatTimeRemaining(pollEndsAt);
+  pollCountdown.textContent = remaining;
+
+  if (remaining === 'Closed') {
+    voteButton.disabled = true;
+    if (!hasVoted) voteMessage.textContent = 'The poll is closed.';
+  }
+}
+
 async function refreshBallot(showError = true) {
   try {
-    candidates = await getCandidates();
+    const ballot = await getCandidates();
+    candidates = ballot.candidates || [];
+    pollEndsAt = ballot.pollEndsAt || null;
+    renderPollCountdown();
     const positions = [...new Set(candidates.map((candidate) => candidate.position))];
     if (!positions.includes(currentPosition)) currentPosition = positions[0] || '';
     renderPositionOptions();
@@ -129,6 +165,11 @@ voteForm.addEventListener('submit', async (event) => {
   const selectedId = new FormData(voteForm).get('candidate');
   const voterAccount = getVoterAccount();
   if (!selectedId || !voterAccount || hasVoted) return;
+  if (pollEndsAt && new Date(pollEndsAt).getTime() <= Date.now()) {
+    voteButton.disabled = true;
+    voteMessage.textContent = 'The poll is closed.';
+    return;
+  }
   if (!/^[A-Z0-9_]+#[0-9]{4,5}$/.test(voterAccount)) {
     voteButton.disabled = false;
     voteMessage.textContent = 'Use your IGN and 4- or 5-digit tag, for example Chizu#0328 or Chizu#03282.';
@@ -152,5 +193,9 @@ voteForm.addEventListener('submit', async (event) => {
 });
 
 restoreVoterAccount();
+renderPollCountdown();
 refreshBallot();
-setInterval(() => refreshBallot(false), 5000);
+setInterval(() => {
+  renderPollCountdown();
+  refreshBallot(false);
+}, 5000);

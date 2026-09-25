@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#102d2a" />
   <title>NAES Guild | Admin Workspace</title>
+  <link rel="icon" type="image/jpeg" href="image/naes icon.jpg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -14,7 +15,11 @@
 <body>
   <div class="page-shell admin-page">
     <header class="topbar">
-      <a class="brand" href="index.html" aria-label="NAES Guild home"><span class="brand-mark" aria-hidden="true">NAES</span><span>New Antioch Esports Guild</span></a>
+      <a class="brand" href="index.html" aria-label="NAES Guild home">
+        <img class="brand-mark" src="image/naes icon.jpg" alt="NAES" aria-hidden="true" />
+        <img class="brand-preview" src="image/naes icon.jpg" alt="NAES preview" aria-hidden="true" />
+        <span>New Antioch Esports Guild</span>
+      </a>
       <div class="topbar-actions"><a class="admin-link" href="index.html">Public poll ↗</a><div class="poll-status"><span class="live-dot" aria-hidden="true"></span> Admin workspace</div></div>
     </header>
 
@@ -55,6 +60,12 @@
             <label>Short Bio<input id="candidate-bio" name="bio" type="text" placeholder="e.g. Student council · Manila" required /></label>
             <button class="admin-button" type="submit"><span>Add to ballot</span><span aria-hidden="true">+</span></button>
             <p class="form-note" id="admin-message" aria-live="polite">Candidate records are stored on the ballot server.</p>
+          </form>
+          <form class="admin-form" id="poll-form">
+            <div class="form-intro"><strong>Set poll deadline</strong><span>Choose when voting closes for the public ballot.</span></div>
+            <label>Poll closes at<input id="poll-closes-at" name="pollClosesAt" type="datetime-local" required /></label>
+            <button class="admin-button" type="submit"><span>Update poll deadline</span><span aria-hidden="true">↗</span></button>
+            <p class="form-note" id="poll-message" aria-live="polite">The public countdown updates automatically.</p>
           </form>
           <div class="candidate-directory"><div class="directory-top"><div><span class="section-label">Candidate directory</span><strong id="candidate-total">0 candidates</strong></div><span class="directory-hint">Manage by position</span></div><div class="directory-list" id="directory-list"></div></div>
         </div>

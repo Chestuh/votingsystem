@@ -3,9 +3,12 @@ const loginForm = document.querySelector('#login-form');
 const loginMessage = document.querySelector('#login-message');
 const adminConsole = document.querySelector('#admin-console');
 const candidateForm = document.querySelector('#candidate-form');
+const pollForm = document.querySelector('#poll-form');
+const pollClosesAtInput = document.querySelector('#poll-closes-at');
 const directoryList = document.querySelector('#directory-list');
 const candidateTotal = document.querySelector('#candidate-total');
 const adminMessage = document.querySelector('#admin-message');
+const pollMessage = document.querySelector('#poll-message');
 const voterList = document.querySelector('#voter-list');
 const voterEmpty = document.querySelector('#voter-empty');
 const voterMessage = document.querySelector('#voter-message');
@@ -34,9 +37,23 @@ async function request(url, options = {}) {
   return data;
 }
 
+function toLocalDateTimeValue(value) {
+  if (!value) return '';
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return '';
+  const local = new Date(date.getTime() - date.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
+  return local;
+}
+
+async function loadPollSettings() {
+  const data = await request('/api/candidates');
+  if (pollClosesAtInput && data.pollEndsAt) pollClosesAtInput.value = toLocalDateTimeValue(data.pollEndsAt);
+}
+
 async function loadDirectory() {
   const data = await request('/api/candidates');
   candidates = data.candidates;
+  if (pollClosesAtInput && data.pollEndsAt) pollClosesAtInput.value = toLocalDateTimeValue(data.pollEndsAt);
   candidateTotal.textContent = `${candidates.length} ${candidates.length === 1 ? 'candidate' : 'candidates'}`;
   directoryList.innerHTML = candidates.length
     ? candidates.map((candidate) => `<div class="directory-item"><span class="directory-avatar avatar-${candidate.color}">${escapeHTML(getInitials(candidate.name))}</span><span class="directory-details"><strong>${escapeHTML(candidate.name)}</strong><small>${escapeHTML(candidate.position)} · ${candidate.votes} votes</small></span><button class="remove-button" type="button" data-remove="${candidate.id}" aria-label="Remove ${escapeHTML(candidate.name)}">Remove</button></div>`).join('')
@@ -94,6 +111,7 @@ loginForm.addEventListener('submit', async (event) => {
     await request('/api/admin/login', { method: 'POST', body: JSON.stringify({ username: formData.get('username'), password: formData.get('password') }) });
     loginPanel.hidden = true;
     adminConsole.hidden = false;
+    await loadPollSettings();
     await loadDirectory();
   } catch (error) {
     loginMessage.textContent = error.message;
@@ -111,5 +129,19 @@ candidateForm.addEventListener('submit', async (event) => {
     adminMessage.textContent = data.message;
   } catch (error) {
     adminMessage.textContent = error.message;
+  }
+});
+
+pollForm.addEventListener('submit', async (event) => {
+  event.preventDefault();
+  if (!pollClosesAtInput || !pollClosesAtInput.value) {
+    pollMessage.textContent = 'Choose a time for the poll to close.';
+    return;
+  }
+  try {
+    const data = await request('/api/admin/poll', { method: 'POST', body: JSON.stringify({ pollClosesAt: new Date(pollClosesAtInput.value).toISOString() }) });
+    pollMessage.textContent = data.message;
+  } catch (error) {
+    pollMessage.textContent = error.message;
   }
 });
