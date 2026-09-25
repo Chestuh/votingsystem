@@ -140,7 +140,9 @@ pollForm.addEventListener('submit', async (event) => {
   }
   try {
     const data = await request('/api/admin/poll', { method: 'POST', body: JSON.stringify({ pollClosesAt: new Date(pollClosesAtInput.value).toISOString() }) });
-    pollMessage.textContent = data.message;
+    const selectedTime = new Date(pollClosesAtInput.value);
+    pollMessage.textContent = `The poll closes on ${selectedTime.toLocaleString()}.`;
+    if (data.pollEndsAt) pollClosesAtInput.value = toLocalDateTimeValue(data.pollEndsAt);
   } catch (error) {
     pollMessage.textContent = error.message;
   }

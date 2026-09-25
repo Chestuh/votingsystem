@@ -23,7 +23,7 @@ export default async function handler(request, response) {
     const state = await getState();
     state.pollEndsAt = closedAt.toISOString();
     await getRedis().set(stateKey, state);
-    return sendJson(response, 200, { message: `The poll closes on ${closedAt.toLocaleString()}.` });
+    return sendJson(response, 200, { message: 'Poll deadline updated.', pollEndsAt: closedAt.toISOString() });
   } catch (error) {
     return handleApiError(response, error);
   }
