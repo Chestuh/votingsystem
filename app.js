@@ -44,7 +44,7 @@ function getInitials(name) {
 async function getCandidates() {
   const response = await fetch('/api/candidates', { cache: 'no-store' });
   const data = await readResponse(response);
-  return data.candidates;
+  return data;
 }
 
 async function readResponse(response) {
