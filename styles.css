@@ -33,9 +33,15 @@ button { cursor: pointer; }
 .hero-copy { max-width: 420px; margin: 0; color: var(--muted); font-size: 15px; line-height: 1.75; }
 .hero-meta { display: flex; align-items: center; gap: 15px; margin-top: 35px; color: var(--muted); font-family: "DM Mono", monospace; font-size: 10px; text-transform: uppercase; letter-spacing: .03em; }
 .hero-meta strong { color: var(--ink); font-weight: 500; }.meta-divider { width: 4px; height: 4px; background: var(--mint); border-radius: 50%; }
-.poll-layout { display: grid; grid-template-columns: 1.06fr .94fr; gap: 22px; align-items: start; }
+.poll-layout { position: relative; display: grid; grid-template-columns: 1.06fr .94fr; gap: 22px; align-items: start; }
 .vote-panel, .results-panel { background: var(--panel); border: 1px solid var(--line); box-shadow: var(--shadow); }
 .vote-panel { padding: 38px 38px 30px; }.results-panel { padding: 38px 36px 28px; background: var(--ink); border-color: var(--ink); color: #fff; }
+.poll-closed-overlay { position: absolute; inset: 0; z-index: 2; display: grid; place-items: center; padding: 28px; background: rgba(244, 246, 240, .56); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+.poll-closed-overlay[hidden] { display: none; }
+.poll-closed-card { display: grid; gap: 13px; width: min(100%, 380px); padding: 32px 34px; border: 1px solid rgba(24, 51, 48, .16); border-radius: 4px; background: rgba(255, 255, 255, .94); box-shadow: 0 24px 55px rgba(26, 54, 47, .18); text-align: center; }
+.poll-closed-card .section-label { color: #b26355; }
+.poll-closed-card strong { font-size: clamp(21px, 3vw, 29px); line-height: 1.14; letter-spacing: -.05em; }
+.poll-closed-signoff { color: var(--muted); font-family: "DM Mono", monospace; font-size: 10px; letter-spacing: .08em; text-transform: uppercase; }
 .section-heading, .results-topline, .results-title-row, .results-footer { display: flex; align-items: center; justify-content: space-between; }.section-heading { margin-bottom: 27px; }
 .account-field { display: grid; gap: 12px; margin-bottom: 18px; }
 .account-label { color: #9aa9a1; font-family: "DM Mono", monospace; font-size: 9px; letter-spacing: .08em; text-transform: uppercase; }

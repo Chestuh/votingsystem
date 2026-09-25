@@ -8,6 +8,7 @@ const leaderboard = document.querySelector('#leaderboard');
 const voterIgnInput = document.querySelector('#voter-ign');
 const voterTagInput = document.querySelector('#voter-tag');
 const pollCountdown = document.querySelector('#poll-countdown');
+const pollClosedOverlay = document.querySelector('#poll-closed-overlay');
 const voterAccountKey = 'voiceboard-voter-account';
 let candidates = [];
 let currentPosition = '';
@@ -118,6 +119,7 @@ function renderPollCountdown() {
 
   const remaining = formatTimeRemaining(pollEndsAt);
   pollCountdown.textContent = remaining;
+  if (pollClosedOverlay) pollClosedOverlay.hidden = remaining !== 'Closed';
 
   if (remaining === 'Closed') {
     voteButton.disabled = true;
