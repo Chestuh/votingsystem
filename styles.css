@@ -34,6 +34,7 @@ button { cursor: pointer; }
 .hero-meta { display: flex; align-items: center; gap: 15px; margin-top: 35px; color: var(--muted); font-family: "DM Mono", monospace; font-size: 10px; text-transform: uppercase; letter-spacing: .03em; }
 .hero-meta strong { color: var(--ink); font-weight: 500; }.meta-divider { width: 4px; height: 4px; background: var(--mint); border-radius: 50%; }
 .poll-layout { position: relative; display: grid; grid-template-columns: 1.06fr .94fr; gap: 22px; align-items: start; }
+.poll-layout.vote-only { grid-template-columns: minmax(0, min(602px, 100%)); justify-content: center; }
 .vote-panel, .results-panel { background: var(--panel); border: 1px solid var(--line); box-shadow: var(--shadow); }
 .vote-panel { padding: 38px 38px 30px; }.results-panel { padding: 38px 36px 28px; background: var(--ink); border-color: var(--ink); color: #fff; }
 .poll-closed-overlay { position: absolute; inset: 0; z-index: 2; display: grid; place-items: center; padding: 28px; background: rgba(244, 246, 240, .56); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
