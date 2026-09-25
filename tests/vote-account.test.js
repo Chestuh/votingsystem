@@ -6,6 +6,7 @@ import { hasAccountVoted, normalizeVoterAccount, recordVote, recordVoterAccount 
 test('normalizeVoterAccount trims and normalizes IGN#TAG account identifiers', () => {
   assert.equal(normalizeVoterAccount('  chizu#0328  '), 'CHIZU#0328');
   assert.equal(normalizeVoterAccount('  ryu#9999 '), 'RYU#9999');
+  assert.equal(normalizeVoterAccount('  ryu#99999 '), 'RYU#99999');
   assert.equal(normalizeVoterAccount(''), '');
 });
 

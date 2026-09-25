@@ -129,9 +129,9 @@ voteForm.addEventListener('submit', async (event) => {
   const selectedId = new FormData(voteForm).get('candidate');
   const voterAccount = getVoterAccount();
   if (!selectedId || !voterAccount || hasVoted) return;
-  if (!/^[A-Z0-9_]+#[0-9]{4}$/.test(voterAccount)) {
+  if (!/^[A-Z0-9_]+#[0-9]{4,5}$/.test(voterAccount)) {
     voteButton.disabled = false;
-    voteMessage.textContent = 'Use your IGN and 4-digit tag, for example Chizu#0328.';
+    voteMessage.textContent = 'Use your IGN and 4- or 5-digit tag, for example Chizu#0328 or Chizu#03282.';
     return;
   }
   voteButton.disabled = true;
