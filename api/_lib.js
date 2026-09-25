@@ -13,7 +13,6 @@ export const defaultState = {
     { id: 'sam', name: 'Sam Williams', position: 'Guidance Officers', bio: 'Community builder - Oakland', votes: 150, color: 'sam' },
   ],
   votedTokens: [],
-  votedIPs: [],
 };
 
 export function getRedis() {
@@ -24,22 +23,6 @@ export function getRedis() {
   }
   if (!redisClient) redisClient = new Redis({ url, token });
   return redisClient;
-}
-
-export function getClientIp(request) {
-  const forwarded = request.headers['x-forwarded-for'];
-  if (forwarded) return String(forwarded).split(',')[0].trim();
-  const realIp = request.headers['x-real-ip'];
-  if (realIp) return String(realIp).trim();
-  const socketAddress = request.socket?.remoteAddress || '';
-  return socketAddress.startsWith('::ffff:') ? socketAddress.replace(/^::ffff:/, '') : socketAddress;
-}
-
-export function hasVotedFromIp(state, ipAddress) {
-  if (!ipAddress) return false;
-  const ip = String(ipAddress).trim().split(',')[0].trim();
-  if (!ip || ip === 'unknown') return false;
-  return Boolean(state?.votedIPs?.includes(ip));
 }
 
 export function handleApiError(response, error) {
