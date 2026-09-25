@@ -43,10 +43,13 @@
 
           <form id="vote-form">
             <label class="account-field">
-              Player IGN#TAG  
-              <input id="voter-account" name="voterAccount" type="text" autocomplete="username" placeholder="e.g. Chizu#03282" pattern="^[A-Z0-9_]+#[0-9]{5}$" title="Use your IGN followed by a 5-digit tag, for example Chizu#03282" required />
+              <span class="account-label">Player IGN#12345</span>
+              <div class="account-inline">
+                <input id="voter-ign" name="voterIgn" type="text" autocomplete="username" pattern="^[A-Za-z0-9_]+$" maxlength="16" placeholder="Player IGN" aria-label="Player IGN" required />
+                <span class="tag-separator" aria-hidden="true">#</span>
+                <input id="voter-tag" name="voterTag" type="text" inputmode="numeric" maxlength="5" pattern="[A-Z0-9]{5}" placeholder="12345" aria-label="Player tag" required />
+              </div>
             </label>
-            <br><br>
             <fieldset class="candidate-list">
               <legend class="sr-only">Choose one candidate</legend>
             </fieldset>

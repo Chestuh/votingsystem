@@ -5,20 +5,26 @@ const voteMessage = document.querySelector('#vote-message');
 const totalVotesElement = document.querySelector('#total-votes');
 const publicPosition = document.querySelector('#public-position');
 const leaderboard = document.querySelector('#leaderboard');
-const voterAccountInput = document.querySelector('#voter-account');
+const voterIgnInput = document.querySelector('#voter-ign');
+const voterTagInput = document.querySelector('#voter-tag');
 const voterAccountKey = 'voiceboard-voter-account';
 let candidates = [];
 let currentPosition = '';
 let hasVoted = false;
 
 function getVoterAccount() {
-  return (voterAccountInput?.value || '').trim().replace(/\s+/g, '').toUpperCase();
+  const ign = (voterIgnInput?.value || '').trim().replace(/\s+/g, '').toUpperCase();
+  const tag = (voterTagInput?.value || '').trim().replace(/\s+/g, '');
+  if (!ign || !tag) return '';
+  return `${ign}#${tag}`;
 }
 
 function restoreVoterAccount() {
-  if (!voterAccountInput) return;
   const savedAccount = localStorage.getItem(voterAccountKey);
-  if (savedAccount) voterAccountInput.value = savedAccount.trim();
+  if (!savedAccount) return;
+  const [ign, tag = ''] = savedAccount.trim().split('#');
+  if (voterIgnInput) voterIgnInput.value = ign || '';
+  if (voterTagInput) voterTagInput.value = tag || '';
 }
 
 function formatNumber(value) {
@@ -105,7 +111,11 @@ if (publicPosition) {
     currentPosition = publicPosition.value;
     hasVoted = false;
     voteForm.reset();
-    if (voterAccountInput) voterAccountInput.value = savedAccount;
+    if (savedAccount) {
+      const [ign, tag = ''] = savedAccount.split('#');
+      if (voterIgnInput) voterIgnInput.value = ign || '';
+      if (voterTagInput) voterTagInput.value = tag || '';
+    }
     voteButton.disabled = true;
     voteButton.querySelector('span').textContent = 'Submit my vote';
     voteMessage.textContent = 'Your choice is private and can’t be changed.';
