@@ -38,20 +38,40 @@
         <p class="hero-copy">Add every person who wants to run, assign their office, and keep the public ballot organized.</p>
       </section>
 
-      <section class="admin-section admin-section-page" aria-label="Candidate management">
-        <div class="admin-heading"><div><span class="section-label">Candidate management</span><h2>Add candidates by office</h2></div><span class="admin-lock">Authenticated administrator</span></div>
+      <div class="admin-layout">
+      <nav class="admin-sidebar" aria-label="Admin navigation">
+        <span class="section-label">Workspace menu</span>
+        <button class="admin-nav-link is-active" type="button" data-view="candidates">Candidate management</button>
+        <button class="admin-nav-link" type="button" data-view="voters">List of voters</button>
+      </nav>
+
+      <section class="admin-section admin-section-page admin-view" data-view-panel="candidates" aria-label="Candidate management">
+        <div class="admin-heading"><div><span class="section-label">Candidate management</span><h2>Add candidates by position</h2></div><span class="admin-lock">Authenticated administrator</span></div>
         <div class="admin-grid">
           <form class="admin-form" id="candidate-form">
             <div class="form-intro"><strong>Register a candidate</strong><span>New entries appear on the public poll as soon as they are added.</span></div>
             <label>Full name<input id="candidate-name" name="name" type="text" placeholder="e.g. Jordan Lee" required /></label>
             <label>Officer position<select id="candidate-position" name="position" required><option value="Captain">Captain</option><option value="Vice-Captain">Vice-Captain</option><option value="Secretary">Secretary</option><option value="Guidance Officers">Guidance Officers</option><option value="Leiutenants">Leiutenants</option></select></label>
-            <label>Location or short bio<input id="candidate-bio" name="bio" type="text" placeholder="e.g. Student council · Manila" required /></label>
+            <label>Short Bio<input id="candidate-bio" name="bio" type="text" placeholder="e.g. Student council · Manila" required /></label>
             <button class="admin-button" type="submit"><span>Add to ballot</span><span aria-hidden="true">+</span></button>
             <p class="form-note" id="admin-message" aria-live="polite">Candidate records are stored on the ballot server.</p>
           </form>
-          <div class="candidate-directory"><div class="directory-top"><div><span class="section-label">Candidate directory</span><strong id="candidate-total">0 candidates</strong></div><span class="directory-hint">Manage by office</span></div><div class="directory-list" id="directory-list"></div></div>
+          <div class="candidate-directory"><div class="directory-top"><div><span class="section-label">Candidate directory</span><strong id="candidate-total">0 candidates</strong></div><span class="directory-hint">Manage by position</span></div><div class="directory-list" id="directory-list"></div></div>
         </div>
       </section>
+
+      <section class="admin-section admin-section-page admin-view" data-view-panel="voters" aria-label="List of voters" hidden>
+        <div class="admin-heading"><div><span class="section-label">Account activity</span><h2>List of voters</h2></div><span class="admin-lock">One row per IGN#TAG</span></div>
+        <div class="voter-table-wrap">
+          <table class="voter-table">
+            <thead><tr><th>ID</th><th>IGN#TAG</th><th>Number of votes</th><th>Actions</th></tr></thead>
+            <tbody id="voter-list"></tbody>
+          </table>
+          <p class="empty-state" id="voter-empty" hidden>No accounts have voted yet.</p>
+        </div>
+        <p class="form-note" id="voter-message" aria-live="polite">Each account can vote once in every available position.</p>
+      </section>
+      </div>
       </div>
     </main>
 

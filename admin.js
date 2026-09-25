@@ -6,6 +6,11 @@ const candidateForm = document.querySelector('#candidate-form');
 const directoryList = document.querySelector('#directory-list');
 const candidateTotal = document.querySelector('#candidate-total');
 const adminMessage = document.querySelector('#admin-message');
+const voterList = document.querySelector('#voter-list');
+const voterEmpty = document.querySelector('#voter-empty');
+const voterMessage = document.querySelector('#voter-message');
+const viewButtons = document.querySelectorAll('[data-view]');
+const viewPanels = document.querySelectorAll('[data-view-panel]');
 let candidates = [];
 
 function escapeHTML(value) {
@@ -50,6 +55,36 @@ async function loadDirectory() {
     });
   });
 }
+
+async function loadVoters() {
+  const data = await request('/api/admin/voters');
+  voterList.innerHTML = data.voters.map((voter, index) => `<tr><td>${String(index + 1).padStart(2, '0')}</td><td><strong>${escapeHTML(voter.account)}</strong></td><td>${voter.votes}</td><td><button class="remove-button" type="button" data-delete-voter="${encodeURIComponent(voter.id)}" aria-label="Delete ${escapeHTML(voter.account)}">Delete user</button></td></tr>`).join('');
+  voterEmpty.hidden = data.voters.length > 0;
+  voterList.querySelectorAll('[data-delete-voter]').forEach((button) => {
+    button.addEventListener('click', async () => {
+      button.disabled = true;
+      try {
+        const data = await request(`/api/admin/voters/${button.dataset.deleteVoter}`, { method: 'DELETE' });
+        await loadVoters();
+        await loadDirectory();
+        voterMessage.textContent = data.message;
+      } catch (error) {
+        button.disabled = false;
+        voterMessage.textContent = error.message;
+      }
+    });
+  });
+}
+
+viewButtons.forEach((button) => {
+  button.addEventListener('click', async () => {
+    viewButtons.forEach((item) => item.classList.toggle('is-active', item === button));
+    viewPanels.forEach((panel) => { panel.hidden = panel.dataset.viewPanel !== button.dataset.view; });
+    if (button.dataset.view === 'voters') {
+      try { await loadVoters(); } catch (error) { voterMessage.textContent = error.message; }
+    }
+  });
+});
 
 loginForm.addEventListener('submit', async (event) => {
   event.preventDefault();

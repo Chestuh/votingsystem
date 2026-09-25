@@ -128,7 +128,7 @@ voteForm.addEventListener('submit', async (event) => {
   voteMessage.textContent = 'Submitting your vote...';
   try {
     localStorage.setItem(voterAccountKey, voterAccount);
-    const response = await fetch('/api/vote', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ candidateId: selectedId, voterAccount }) });
+    const response = await fetch('/api/vote', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ candidateId: selectedId, voterAccount, position: currentPosition }) });
     const data = await readResponse(response);
     if (!response.ok) throw new Error(data.error || 'Vote could not be submitted.');
     hasVoted = true;

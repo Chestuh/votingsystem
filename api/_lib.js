@@ -13,6 +13,7 @@ export const defaultState = {
     { id: 'sam', name: 'Sam Williams', position: 'Guidance Officers', bio: 'Community builder - Oakland', votes: 150, color: 'sam' },
   ],
   votedAccounts: [],
+  voterVotes: {},
 };
 
 export function getRedis() {

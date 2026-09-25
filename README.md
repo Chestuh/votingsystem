@@ -23,7 +23,8 @@ If no password is configured, the server generates a temporary password and prin
 - Candidates and vote totals are persisted in `data/ballot.json`.
 - The public page refreshes the live tally every five seconds.
 - Admin candidate changes are protected by a session cookie.
-- One vote is allowed per account for this ballot.
+- Each account can vote once in every available position; duplicate votes for the same position are rejected.
+- Admins can open the voter list to see each unique IGN#TAG, the number of positions they voted in, and delete a voter.
 
 For public deployment, put the server behind HTTPS and a reverse proxy, set a permanent strong admin password through the environment, and pair this account-based limit with real voter authentication for stronger one-person-one-vote enforcement.
 
