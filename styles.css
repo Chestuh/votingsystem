@@ -509,6 +509,7 @@ h2 {
   width: var(--progress, var(--result-progress));
   height: 100%;
   border-radius: inherit;
+  background: #65ad82;
 }
 
 .result-count {
